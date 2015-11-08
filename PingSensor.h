@@ -1,7 +1,3 @@
-#ifndef PINGSENSOR_H
-#define PINGSENSOR_H
-
-using namespace std;
 /* Ping))) Sensor
 This Code was based off of the Example code that is located in the Public domain. 
 
@@ -26,6 +22,11 @@ This Code was based off of the Example code that is located in the Public domain
    This example code is in the public domain.
 
  */
+#ifndef PINGSENSOR_H
+#define PINGSENSOR_H
+
+using namespace std;
+
 class PingSensor
 {
 public:

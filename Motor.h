@@ -15,22 +15,25 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
-#include <Arduino.h>
-//#include <Servo.h>
+using namespace std;
+
+//#include <Arduino.h>
+#include <Servo.h>
 
 
-class Motor : public Servo
+class Motor
 {
 public:
-	Motor(int Cpin) : Servo() {};
-	virtual ~Motor() {};
-	SetSpeed (int speed) {};
-	GetSpeed() const {return speed;}
+	Motor(int Cpin);
+	//virtual ~Motor() {};
+	SetSpeed (int speed);
+	GetSpeed() const {return m_speed;}
 
 private:
 	SetSpeedF(int speed) {};
 	SetSpeedR(int speed) {};
-	int speed;
+	int m_speed;
+	int m_Cpin;
 	Servo ESC;
 
 };
