@@ -41,7 +41,7 @@ Open source - do what you want with this code!
 */
 #include <Servo.h>
 
-
+//Changing this to a double does nothing for precision.
 int value = 0; // set values you need to zero
 
 Servo firstESC; //Create as much as Servoobject you want. You can controll 2 or more Servos at the same time
@@ -56,12 +56,22 @@ void setup() {
 void loop() {
 
 //First connect your ESC WITHOUT Arming. Then Open Serial and follo Instructions
- 
+//Neutral value is between 84 and 92 degrees. Anything above or below that will cause motor to turn.
+//Neutal value in Microseconds is between 1474 and 1533
   firstESC.write(value);
  
   if(Serial.available()) 
   {
     Serial.println("Please give input!");
     value = Serial.parseInt();    // Parse an Integer from Serial
+    Serial.println(value);
   }
+  /*firstESC.write(92);
+  delay(1000);
+  firstESC.write(150);
+  delay(20);
+  firstESC.write(80);
+  delay(1000);*/
+
+  
 }
