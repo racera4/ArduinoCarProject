@@ -43,6 +43,7 @@ public:
   void setDelay(int sDelay) {m_delay = sDelay;}
 
   void getDistance(double duration);
+  double getDistance();
   int getPingPin() const {return m_pingPin;}
   int getDelay() const {return m_delay;}
 

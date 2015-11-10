@@ -78,6 +78,10 @@ void PingSensor::getDistance(double duration)
   inches = microsecondsToInches(duration);
   cm = microsecondsToCentimeters(duration);
 }
+double PingSensor::getDistance()
+{
+  return inches;
+}
 double PingSensor::microsecondsToInches(double microseconds) {
   // According to Parallax's datasheet for the PING))), there are
   // 73.746 microseconds per inch (i.e. sound travels at 1130 feet per
