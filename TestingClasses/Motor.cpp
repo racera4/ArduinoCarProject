@@ -11,6 +11,11 @@
 * Version 1.01
 * Date: 11-8-2015
 * 
+* Version 1.50
+* Date: 11-18-2015
+* Adjust the case of some of the methods to match proper standards.
+* Code complies as it should.
+* 
 **********************************/
 
 #include <Arduino.h>
@@ -22,8 +27,7 @@ Motor::Motor(int Cpin)
 {
 	ESC.attach(Cpin);
 }
-//virtual ~Motor() {};
-void Motor::SetSpeed(int speed)
+void Motor::setSpeed(int speed)
 {
 	//convert user readable speed to ESC readable speed
 	m_speed = speed * 18;

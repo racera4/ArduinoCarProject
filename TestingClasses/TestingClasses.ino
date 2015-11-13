@@ -1,17 +1,18 @@
 #include "PingSensor.h"
 #include <Servo.h>
+#include "Motor.h"
 
 int pingPin = 11;
 int servoPin = 9;
 int sDelay = 100;
 
 PingSensor sensor(pingPin, sDelay);
-Servo ESC;
+Motor ESC(servoPin);
 
 void setup() {
   // put your setup code here, to run once:
   sensor.startSerial();
-  ESC.attach(servoPin);
+  //ESC.attach(servoPin);
   moveStop();
 }
 
@@ -36,14 +37,14 @@ void loop() {
 }
 void moveForward()
 {
-  ESC.write(100);
+  ESC.setSpeed(100);
 }
 void moveReverse()
 {
-  ESC.write(30);
+  ESC.setSpeed(30);
 }
 void moveStop()
 {
-  ESC.write(92);
+  ESC.setSpeed(92);
 }
 

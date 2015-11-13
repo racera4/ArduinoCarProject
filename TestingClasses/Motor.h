@@ -9,6 +9,8 @@
 * Created file and constructor, destructor, no methods or variables created yet.
 * Version 1.01
 * Added SetSpeed, and GetSpeed Methods and private variable speed.
+* Version 2.00
+* Fixed all the methods and variables. It now compiles correctly!
 **********************************/
 
 
@@ -21,19 +23,19 @@ using namespace std;
 #include <Servo.h>
 
 
-class Motor
+class Motor : public Servo
 {
 public:
-	Motor(int Cpin) : Servo();
-	//virtual ~Motor() {};
-	SetSpeed (int speed);
-	GetSpeed() const {return m_speed;}
+	Motor(int Cpin);
+	virtual ~Motor() {};
+	void setSpeed (int speed);
+	int GetSpeed() const {return m_speed;}
 
 private:
-	SetSpeedF(int speed) {};
-	SetSpeedR(int speed) {};
+	void setSpeedF(int speed) {};
+	void setSpeedR(int speed) {};
 	int m_speed;
-	int m_Cpin
+	int m_Cpin;
 
 	Servo ESC;
 
