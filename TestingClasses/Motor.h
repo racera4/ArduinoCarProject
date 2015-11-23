@@ -4,6 +4,7 @@
 * Summary: This was created in as part of my Senior project
 * Motor.h utilizes peices of the Servo.h from the Arduino library
 * It was made to control ESC's (Engine Speed Control) modules from R/C vehicles
+* See Motor.cpp for instructions on implementation
 * Revisions:
 * Version 1.00
 * Created file and constructor, destructor, no methods or variables created yet.
@@ -29,7 +30,7 @@ public:
 	Motor(int Cpin);
 	virtual ~Motor() {};
 	void setSpeed (int speed);
-	int GetSpeed() const {return m_speed;}
+	int getSpeed() const {return m_speed;}
 
 private:
 	void setSpeedF(int speed) {};
@@ -37,7 +38,7 @@ private:
 	int m_speed;
 	int m_Cpin;
 
-	Servo ESC;
+	Servo m_ESC;
 
 };
 #endif

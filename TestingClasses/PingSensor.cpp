@@ -39,7 +39,7 @@ PingSensor::PingSensor(int pingPin, int sDelay)
 
 void PingSensor::startSerial() {
   // initialize serial communication:
-  Serial.begin(9600);
+  Serial.begin(115200);
 }
 
 void PingSensor::sensorRead() {

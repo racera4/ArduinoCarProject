@@ -3,48 +3,68 @@
 #include "Motor.h"
 
 int pingPin = 11;
-int servoPin = 9;
+int sPin = 3;
 int sDelay = 100;
 
 PingSensor sensor(pingPin, sDelay);
-Motor ESC(servoPin);
+//Motor ESC1(sPin);
+Servo M1;
 
-void setup() {
-  // put your setup code here, to run once:
-  sensor.startSerial();
-  //ESC.attach(servoPin);
-  moveStop();
+void setup()
+{
+    // put your setup code here, to run once:
+    sensor.startSerial();
+    M1.attach(sPin);
+    //moveStop();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  sensor.sensorRead();
-  sensor.printDistance();
-  if (sensor.getDistance() > 5)
-  {
-    moveForward();
-    Serial.println("I made it here!");
-  }
-  else if (sensor.getDistance() < 5)
-  {
-    moveReverse();
-  }
-  else
-  {
-    moveStop();
-  }
+void loop() 
+{
+    // put your main code here, to run repeatedly:
+    
+    sensor.sensorRead();
+    sensor.printDistance();
+    if(sensor.getDistance() > 6)
+    {
+      moveForward();
+    }
+    else
+    {
+      moveReverse();
+    }
+    /*if (sensor.getDistance() > 5)
+    {
+      moveForward();
+      deBug();
+    }
+    else if(sensor.getDistance() < 5)
+    {
+      moveReverse();
+    }
+    else
+    {
+      moveStop();
+    }*/
 
 }
 void moveForward()
 {
-  ESC.setSpeed(100);
+    M1.write(100);
+    //ESC1.setSpeed(100);
 }
 void moveReverse()
 {
-  ESC.setSpeed(30);
+    M1.write(82);
+    //ESC1.setSpeed(82);
 }
 void moveStop()
 {
-  ESC.setSpeed(92);
+    M1.write(92);
+    //ESC1.setSpeed(92);
+}
+
+void deBug()
+{
+    Serial.println("This is a Debug message");
 }
 
