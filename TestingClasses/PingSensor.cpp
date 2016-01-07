@@ -72,9 +72,9 @@ void PingSensor::sensorRead() {
 
   delay(getDelay());
 }
+
 void PingSensor::printDistance()
 {
-  //getDistance(duration);
   Serial.print(inches);
   Serial.print("in, ");
   Serial.print(cm);
