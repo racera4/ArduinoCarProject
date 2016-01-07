@@ -21,6 +21,14 @@
 
    This example code is in the public domain.
 
+
+Revisions:
+1/06/16
+Fixed an issue with calculating the distance.
+The Distance was only being calculated when the Print method was called.
+Removed it from the print method and added it to the read method so 
+every time it reads it calculates a new distance. 
+
  */
 #include <Arduino.h>
 #include "PingSensor.h"
@@ -60,13 +68,13 @@ void PingSensor::sensorRead() {
   duration = pulseIn(getPingPin(), HIGH);
 
   // convert the time into a distance
-  //getDistance(duration);
+  getDistance(duration);
 
   delay(getDelay());
 }
 void PingSensor::printDistance()
 {
-  getDistance(duration);
+  //getDistance(duration);
   Serial.print(inches);
   Serial.print("in, ");
   Serial.print(cm);

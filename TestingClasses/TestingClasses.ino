@@ -23,7 +23,6 @@ void loop()
     // put your main code here, to run repeatedly:
     
     sensor.sensorRead();
-    sensor.printDistance();
     if(sensor.getDistance() > 6)
     {
       moveForward();
