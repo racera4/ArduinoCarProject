@@ -1,3 +1,12 @@
+
+#define DGB
+#ifndef DGB
+
+Serial.print("message");
+
+#endif
+
+
 #include "PingSensor.h"
 #include <Servo.h>
 #include "Motor.h"

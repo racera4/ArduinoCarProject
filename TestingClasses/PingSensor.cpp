@@ -1,6 +1,5 @@
-/* Ping))) Sensor
-   This Code was based off of the Example code that is located in the Public domain. 
-
+/* Title: Ping))) Sensor
+ *  
    This sketch reads a PING))) ultrasonic rangefinder and returns the
    distance to the closest object in range. To do this, it sends a pulse
    to the sensor to initiate a reading, then listens for a pulse
@@ -19,7 +18,14 @@
    modified 30 Aug 2011
    by Tom Igoe
 
-   This example code is in the public domain.
+   Summary:
+   This Code was adapted from the Example code that is located in the Public domain.
+   This file breaks down the original example into sections to allow for execution from other classes.
+
+   Revisions:
+   Version 1.50
+   This version changes when the distance is converted to inches, and how often
+   and where.
 
  */
 #include <Arduino.h>
@@ -60,13 +66,13 @@ void PingSensor::sensorRead() {
   duration = pulseIn(getPingPin(), HIGH);
 
   // convert the time into a distance
-  //getDistance(duration);
+  getDistance(duration);
 
   delay(getDelay());
 }
 void PingSensor::printDistance()
 {
-  getDistance(duration);
+  getDistance();
   Serial.print(inches);
   Serial.print("in, ");
   Serial.print(cm);
@@ -97,5 +103,3 @@ double PingSensor::microsecondsToCentimeters(double microseconds) {
   // object we take half of the distance travelled.
   return microseconds / 29 / 2;
 }
-/*int getPingPin() const {return m_pingPin;}
-int getDelay() const {return m_delay;}*/
