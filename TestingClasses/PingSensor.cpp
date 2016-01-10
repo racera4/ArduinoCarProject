@@ -81,10 +81,6 @@ void PingSensor::sensorRead() {
 
 void PingSensor::printDistance()
 {
-<<<<<<< HEAD
-  getDistance();
-=======
->>>>>>> origin/master
   Serial.print(inches);
   Serial.print("in, ");
   Serial.print(cm);

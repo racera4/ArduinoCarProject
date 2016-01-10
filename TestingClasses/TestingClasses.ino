@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /*********************************
 * Title: TestClasses.ino
 * Author: Benjamin Finley
@@ -25,20 +24,12 @@
 * 
 * 
  */
-
-
-
-
-=======
-
 #define DGB
 #ifndef DGB
 
 Serial.print("message");
 
 #endif
->>>>>>> a0c744f516542436eab80ede25a0aaa1f4744249
-
 
 #include "PingSensor.h"
 #include <Servo.h>
