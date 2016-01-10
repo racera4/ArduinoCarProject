@@ -27,6 +27,14 @@
    This version changes when the distance is converted to inches, and how often
    and where.
 
+
+Revisions:
+1/06/16
+Fixed an issue with calculating the distance.
+The Distance was only being calculated when the Print method was called.
+Removed it from the print method and added it to the read method so 
+every time it reads it calculates a new distance. 
+
  */
 #include <Arduino.h>
 #include "PingSensor.h"
@@ -70,9 +78,13 @@ void PingSensor::sensorRead() {
 
   delay(getDelay());
 }
+
 void PingSensor::printDistance()
 {
+<<<<<<< HEAD
   getDistance();
+=======
+>>>>>>> origin/master
   Serial.print(inches);
   Serial.print("in, ");
   Serial.print(cm);
