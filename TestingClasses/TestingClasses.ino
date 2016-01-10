@@ -1,3 +1,35 @@
+/*********************************
+* Title: TestClasses.ino
+* Author: Benjamin Finley
+* Summary: This was created in for my Senior project
+* It utilizes Servo.h from the Arduino library to control both the ESC and the Steering Servo
+* It can control ESC (Engine Speed Control) modules from R/C vehicles
+* 
+* Values to Operate DuraTrax BLAST ESC:
+* ESC neutral range is: 1472 - 1530 -- 91-95 degrees
+* 1531-1532 microseconds is a strange jittery forward motion, possible engine break. (BLAST ESC)
+* 1470-1471 -- 84-90 degrees - residual positive voltage. Sending these values in degrees will cause the motor to turn in reverse
+* 1533 microseconds -- 96 degrees - is the beginning range of forward motion. (BLAST ESC)
+* 1469 microseconds -- 83 degrees - is the beginning range of reverse motion. (BLAST ESC)
+* 
+* Values to Properly steer the Chevy Lumina Assembly.
+* Right range:
+* MAX right = 108
+* MIN right = 95
+* CENTER = 90
+* Left range:
+* MAX left = 69
+* MIN left = 87
+* 
+* 
+* 
+ */
+
+
+
+
+
+
 #include "PingSensor.h"
 #include <Servo.h>
 
@@ -8,7 +40,7 @@ int rightPingPin = 8;       //Pin for right PING sensor -- Yellow Wire
 
 int motorPin = 3;           //PWM Pin to control the ESC
 int steerPin = 5;           //PWM Pin to control steering servo
-int sDelay = 50;           //Amount of delay between pulses of ping
+int sDelay = 25;           //Amount of delay between pulses of ping
 
 int minDist = 3;
 
@@ -40,13 +72,13 @@ void loop()
     int rtDist = rightSensor.getDistance();  //Get the last read distance
     
     //Steering Control
-    if (rtDist-lDist < 0 )// This creates more of a dynamic control for autonomous driving. (lDist < 5 && rtDist < 5)
+    if (rtDist-lDist < 0 ) // This creates more of a dynamic control for autonomous driving. (lDist < 5 && rtDist < 5)
     {
-      Steer.write(30);
+      Steer.write(108);
     }
     else if (rtDist-lDist > 0)
     {
-      Steer.write(150);
+      Steer.write(73);
     }
     else
     {
