@@ -14,11 +14,11 @@
 * 
 * Values to Properly steer the Chevy Lumina Assembly.
 * Right range:
-* MAX right = 108
+* MAX right = 111
 * MIN right = 95
 * CENTER = 90
 * Left range:
-* MAX left = 69
+* MAX left = 74
 * MIN left = 87
 * 
 * 
@@ -42,6 +42,12 @@ int rightPingPin = 8;       //Pin for right PING sensor -- Yellow Wire
 int motorPin = 3;           //PWM Pin to control the ESC
 int steerPin = 5;           //PWM Pin to control steering servo
 int sDelay = 25;           //Amount of delay between pulses of ping
+
+int MAX_RIGHT = 111;
+int MIN_RIGHT = 95;
+int MAX_LEFT = 74;
+int MIN_LEFT = 87;
+int CENTER = 90;
 
 int minDist = 3;
 
@@ -75,15 +81,15 @@ void loop()
     //Steering Control
     if (rtDist-lDist < 0 ) // This creates more of a dynamic control for autonomous driving. (lDist < 5 && rtDist < 5)
     {
-      Steer.write(108);
+      Steer.write(MAX_RIGHT);
     }
     else if (rtDist-lDist > 0)
     {
-      Steer.write(73);
+      Steer.write(MAX_LEFT);
     }
     else
     {
-      Steer.write(90);
+      Steer.write(CENTER);
     }
     /*else if(rtDist < 5)
     {
