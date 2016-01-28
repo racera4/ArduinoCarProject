@@ -11,13 +11,15 @@
 * 1470-1471 -- 84-90 degrees - residual positive voltage. Sending these values in degrees will cause the motor to turn in reverse
 * 1533 microseconds -- 96 degrees - is the beginning range of forward motion. (BLAST ESC)
 * 1469 microseconds -- 83 degrees - is the beginning range of reverse motion. (BLAST ESC)
+* -- 45 Degrees is maximum reverse speed
+* -- 130 Degress is maximum forward speed
 * 
 * Values to Properly steer the Chevy Lumina Assembly.
 * Right range:
-* MAX right = 111
+* MAX right = 110
 * MIN right = 95
 * Left range:
-* MAX left = 75
+* MAX left = 72
 * MIN left = 87
 * CENTER = 92
 * 
