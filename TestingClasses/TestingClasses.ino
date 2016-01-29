@@ -6,11 +6,11 @@
 * It can control ESC (Engine Speed Control) modules from R/C vehicles
 * 
 * Values to Operate DuraTrax BLAST ESC:
-* ESC neutral range is: 1472 - 1530 -- 91-95 degrees
+* ESC neutral range is: 1460 - 1520 -- 91-95 degrees
 * 1531-1532 microseconds is a strange jittery forward motion, possible engine break. (BLAST ESC)
 * 1470-1471 -- 84-90 degrees - residual positive voltage. Sending these values in degrees will cause the motor to turn in reverse
 * 1533 microseconds -- 96 degrees - is the beginning range of forward motion. (BLAST ESC)
-* 1469 microseconds -- 83 degrees - is the beginning range of reverse motion. (BLAST ESC)
+* 1455 microseconds -- 83 degrees - is the beginning range of reverse motion. (BLAST ESC)
 * -- 45 Degrees is maximum reverse speed
 * -- 130 Degress is maximum forward speed
 * 
