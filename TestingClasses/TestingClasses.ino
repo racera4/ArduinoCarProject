@@ -102,6 +102,7 @@ void setup()
       if(buttonPressed == LOW)
       {
         waitHere = false;
+        Serial.println("Button Pressed!");
         startPark();
       }
     }
@@ -183,13 +184,18 @@ void startPark()
     rightSensor.sensorRead();                //Read right sensor
     int rtDist = rightSensor.getDistance();  //Get the last read distance
 
-
-    //Move backwards ~2 inches from original position
-    if(rDist-(initRearDist-2) > 0)
+    //Move backwards ~4 inches from original position then stop
+    if(rDist-(initRearDist-4) > 0)
     {
       moveReverse();
     }
-    //Turn wheels full right
+    else
+    {
+      moveStop();
+      //Turn wheels full right
+     Steer.write(MAX_RIGHT);
+    }
+    
     
     //Move backwards ~2 inches again
   }
