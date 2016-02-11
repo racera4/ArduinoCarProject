@@ -23,9 +23,11 @@
 * MIN left = 87
 * CENTER = 92
 * 
+*PIN CONNECTIONS
+*PIN 0: UNUSED
+*PIN 1: 
 * 
-* 
- */
+*/
 #define DGB
 #ifndef DGB
 
@@ -36,6 +38,10 @@ Serial.print("message");
 #include "PingSensor.h"
 #include <Servo.h>
 
+#define REVERSE_SLOW 1400
+#define REVERSE_SLOWER 1420
+#define REVERSE_SLOWEST 1430
+
 int frontPingPin = 2;       //Pin for front PING sensor -- Green Wire
 int rearPingPin = 4;        //Pin for rear PING sensor -- Blue Wire
 int leftPingPin = 7;        //Pin for left PING sensor -- Orange Wire
@@ -44,10 +50,14 @@ int rightPingPin = 8;       //Pin for right PING sensor -- Yellow Wire
 int motorPin = 3;           //PWM Pin to control the ESC
 int steerPin = 5;           //PWM Pin to control steering servo
 int sDelay = 25;            //Amount of delay between pulses of ping
+int startPin = 9;           //Input pin for pushbutton
 
-int MAX_RIGHT = 111;        //Maximum right turn in degrees
+int buttonPressed = 0;
+boolean waitHere = true;
+
+int MAX_RIGHT = 110;        //Maximum right turn in degrees
 int MIN_RIGHT = 95;         //Slight right turn in degrees
-int MAX_LEFT = 75;          //Maximum left turn in degrees
+int MAX_LEFT = 72;          //Maximum left turn in degrees
 int MIN_LEFT = 87;          //Slight left turn in degrees
 int CENTER = 92;            //Center point
 
@@ -61,17 +71,35 @@ PingSensor rightSensor(rightPingPin, sDelay);       //Initialize right sensor
 Servo Motor;        //Initialize motor control
 Servo Steer;        //Initialize steering control
 
+int initFrontDist = 0;
+int initRearDist = 0;
+int initLeftDist = 0;
+int initRightDist = 0;
+
 void setup()
 {
+    pinMode(startPin, INPUT);     //Declare input pin for pushbutton
     Motor.attach(motorPin);       //attach motor to control pin
     Steer.attach(steerPin);       //attach steering servo to control pin
     Steer.write(90);              //Center steering servo
     moveStop();                   //Stop motor to prevent accidental takeoff
+    Serial.begin(115200);
+    while(waitHere)
+    {
+      buttonPressed = digitalRead(startPin);
+      if(buttonPressed == LOW)
+      {
+        waitHere = false;
+        startPark();
+      }
+    }
+    
 }
 
 void loop() 
 {
-    frontSensor.sensorRead();                //Read front sensor
+/*    
+ *     frontSensor.sensorRead();                //Read front sensor
     int fDist = frontSensor.getDistance();   //Get the last read distance
     rearSensor.sensorRead();                 //Read rear sensor
     int rDist = rearSensor.getDistance();    //Get the last read distance
@@ -104,7 +132,7 @@ void loop()
     else
     {
       Steer.write(90);
-    }*/
+    }
 
     //Motor Control
     if(fDist >= 10)
@@ -125,8 +153,49 @@ void loop()
     else
     {
       moveStop();
-    }
+    }*/
 }
+
+void startPark()
+{
+  boolean parking = true;
+  getInitDistance();
+  while(parking)
+  {
+    frontSensor.sensorRead();                //Read front sensor
+    int fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    int rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    int lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    int rtDist = rightSensor.getDistance();  //Get the last read distance
+
+
+    //Move backwards ~2 inches from original position
+    if(rDist-(initRearDist-2) > 0)
+    {
+      moveReverse();
+    }
+    //Turn wheels full right
+    
+    //Move backwards ~2 inches again
+  }
+  parking = false;
+}
+
+void getInitDistance()
+{
+    frontSensor.sensorRead();                     //Read front sensor
+    initFrontDist = frontSensor.getDistance();    //Get the last read distance
+    rearSensor.sensorRead();                      //Read rear sensor
+    initRearDist = rearSensor.getDistance();      //Get the last read distance
+    leftSensor.sensorRead();                      //Read left sensor
+    initLeftDist = leftSensor.getDistance();      //Get the last read distance
+    rightSensor.sensorRead();                     //Read right sensor
+    initRightDist = rightSensor.getDistance();    //Get the last read distance
+}
+
 
 void moveForward()
 {
@@ -135,7 +204,7 @@ void moveForward()
 
 void moveReverse()
 {
-    Motor.write(82);
+    Motor.writeMicroseconds(REVERSE_SLOW);
 }
 
 void moveStop()
