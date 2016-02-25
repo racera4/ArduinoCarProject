@@ -63,9 +63,12 @@ int motorPin = 3;           //PWM Pin to control the ESC
 int steerPin = 5;           //PWM Pin to control steering servo
 int sDelay = 25;            //Amount of delay between pulses of ping
 int startPin = 9;           //Input pin for pushbutton
+int speakerPin = 10;        //Output pin for piezo element
 
 int buttonPressed = 0;
 boolean waitHere = true;
+
+int toneFrequency = 440;
 
 int MAX_RIGHT = 110;        //Maximum right turn in degrees
 int MIN_RIGHT = 95;         //Slight right turn in degrees
@@ -88,6 +91,12 @@ int initRearDist = 0;
 int initLeftDist = 0;
 int initRightDist = 0;
 
+boolean phaseOne = false;
+boolean phaseTwo = false;
+boolean phaseThree = false;
+boolean phaseFour = false;
+
+
 void setup()
 {
     pinMode(startPin, INPUT);     //Declare input pin for pushbutton
@@ -105,8 +114,11 @@ void setup()
         Serial.println("Button Pressed!");
         startPark();
       }
+      else
+      {
+        tone(speakerPin,toneFrequency,10); //Sound tone for operator to know that the button can be pressed.
+      }
     }
-    
 }
 
 void loop() 
@@ -173,6 +185,7 @@ void startPark()
 {
   boolean parking = true;
   getInitDistance();
+
   while(parking)
   {
     frontSensor.sensorRead();                //Read front sensor
@@ -187,20 +200,74 @@ void startPark()
     //Move backwards ~4 inches from original position then stop
     if(rDist-(initRearDist-4) > 0)
     {
-      Steer.write(CENTER);
-      moveReverse();
+      Steer.write(CENTER);                   //Center steering while reversing
+      moveReverse();                         //Reverse motor
+      phaseOne = false;
     }
     else
     {
-      moveStop();
-      //Turn wheels full right
-     Steer.write(MAX_RIGHT);
+      moveStop();                            //If this is accomplished stop motor
+      phaseOne = true;
+    }
+    if(phaseOne)
+    {
+      phaseTwo = true;
+      Serial.println("PhaseTwo initiated");
+      Steer.write(MAX_RIGHT);      
     }
     
-    
-    //Move backwards ~2 inches again
+
+    if(phaseOne && phaseTwo/* && phaseThree && phaseFour*/)
+    {
+      parking = false;
+    }
   }
-  parking = false;
+
+//  phaseOnePark();
+
+  parkingComplete();
+}
+
+boolean phaseOnePark()
+{
+    frontSensor.sensorRead();                //Read front sensor
+    int fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    int rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    int lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    int rtDist = rightSensor.getDistance();  //Get the last read distance
+
+    //Move backwards ~4 inches from original position then stop
+    if(rDist-(initRearDist-4) > 0)
+    {
+      Steer.write(CENTER);                   //Center steering while reversing
+      moveReverse();                         //Reverse motor
+      phaseOnePark();
+    }
+    else
+    {
+      moveStop();                            //If this is accomplished stop motor
+      return phaseTwoPark();
+    }
+}
+boolean phaseTwoPark()
+{
+    frontSensor.sensorRead();                //Read front sensor
+    int fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    int rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    int lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    int rtDist = rightSensor.getDistance();  //Get the last read distance
+    
+    Steer.write(MAX_RIGHT);                //Turn wheels full right
+    
+    getInitDistance();
+    
+    return true;
 }
 
 void getInitDistance()
@@ -215,6 +282,16 @@ void getInitDistance()
     initRightDist = rightSensor.getDistance();    //Get the last read distance
 }
 
+void parkingComplete()
+{
+  while(true)
+  {
+    tone(speakerPin, toneFrequency);
+    delay(400);
+    noTone(speakerPin);
+    delay(400);
+  }
+}
 
 void moveForward()
 {
@@ -223,7 +300,7 @@ void moveForward()
 
 void moveReverse()
 {
-    Motor.writeMicroseconds(REVERSE_SLOW);
+    Motor.writeMicroseconds(constrain(REVERSE_SLOW,1400, 1430));
 }
 
 void moveStop()
