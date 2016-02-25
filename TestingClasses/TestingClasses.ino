@@ -187,6 +187,7 @@ void startPark()
     //Move backwards ~4 inches from original position then stop
     if(rDist-(initRearDist-4) > 0)
     {
+      Steer.write(CENTER);
       moveReverse();
     }
     else
