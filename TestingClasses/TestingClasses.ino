@@ -272,14 +272,37 @@ boolean phaseTwoPark()
 
 void getInitDistance()
 {
-    frontSensor.sensorRead();                     //Read front sensor
-    initFrontDist = frontSensor.getDistance();    //Get the last read distance
-    rearSensor.sensorRead();                      //Read rear sensor
-    initRearDist = rearSensor.getDistance();      //Get the last read distance
-    leftSensor.sensorRead();                      //Read left sensor
-    initLeftDist = leftSensor.getDistance();      //Get the last read distance
-    rightSensor.sensorRead();                     //Read right sensor
-    initRightDist = rightSensor.getDistance();    //Get the last read distance
+  int sensorReads = 0;
+    for(int i=0; i>11; i++)
+    {
+      frontSensor.sensorRead();                     //Read front sensor
+      sensorReads += frontSensor.getDistance();
+    }
+    initFrontDist = sensorReads/10; 
+    
+    sensorReads = 0;
+    for(int i=0; i>11; i++)
+    {
+      rearSensor.sensorRead();                      //Read rear sensor
+      sensorReads+= rearSensor.getDistance();
+    }
+    initRearDist =  sensorReads/10;               //Get the last read distance
+
+    sensorReads = 0;
+    for(int i=0; i>11; i++)
+    {
+      leftSensor.sensorRead();                      //Read left sensor
+      sensorReads+= leftSensor.getDistance();
+    }
+    initLeftDist = sensorReads/10;               //Get the last read distance
+    sensorReads = 0;
+    for(int i=0; i>11; i++)
+    {
+      rightSensor.sensorRead();                      //Read rught sensor
+      sensorReads+= rightSensor.getDistance();
+    }
+    initRightDist = sensorReads/10;    //Get the last read distance
+    sensorReads = 0;
 }
 
 void parkingComplete()
