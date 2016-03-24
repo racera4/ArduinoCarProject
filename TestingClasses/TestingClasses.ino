@@ -43,7 +43,7 @@
 #define DGB
 #ifndef DGB
 
-Serial.print("message");
+.print("message");
 
 #endif
 
@@ -72,7 +72,7 @@ int toneFrequency = 440;
 
 int MAX_RIGHT = 110;        //Maximum right turn in degrees
 int MIN_RIGHT = 95;         //Slight right turn in degrees
-int MAX_LEFT = 72;          //Maximum left turn in degrees
+int MAX_LEFT = 74;          //Maximum left turn in degrees
 int MIN_LEFT = 87;          //Slight left turn in degrees
 int CENTER = 92;            //Center point
 
@@ -96,6 +96,8 @@ boolean phaseTwo = false;
 boolean phaseThree = false;
 boolean phaseFour = false;
 
+long previousMillis = 0;
+long interval = 2500;
 void moveStop()
 {
     Motor.write(92);
@@ -148,52 +150,6 @@ void startPark()
   boolean parking = true;
   getInitDistance();
 
-  /*while(parking)
-  {
-    frontSensor.sensorRead();                //Read front sensor
-    int fDist = frontSensor.getDistance();   //Get the last read distance
-    rearSensor.sensorRead();                 //Read rear sensor
-    int rDist = rearSensor.getDistance();    //Get the last read distance
-    leftSensor.sensorRead();                 //Read left sensor
-    int lDist = leftSensor.getDistance();    //Get the last read distance
-    rightSensor.sensorRead();                //Read right sensor
-    int rtDist = rightSensor.getDistance();  //Get the last read distance
-  
-   /* Serial.println(rDist);
-    //Move backwards ~4 inches from original position then stop
-    if(rDist-(initRearDist-4) > 0)
-    {
-      Steer.write(CENTER);                   //Center steering while reversing
-      moveReverse();                         //Reverse motor
-      phaseOne = false;
-    }
-    else if(rtDist <= initRightDist)
-    {
-      Steer.write(CENTER);                   //Center steering while reversing
-      moveReverse();                         //Reverse motor
-      phaseOne = false;
-    }
-    else
-    {
-      moveStop();                            //If this is accomplished stop motor
-      phaseOne = true;
-    }
-    if(phaseOne && !phaseTwo)
-    {
-      Serial.println("PhaseTwo initiated");
-      getInitDistance();
-      if(rDist-(initRearDist-2) > 0)
-      {
-        Steer.write(MAX_RIGHT);
-        moveReverse();
-      }
-    }
-    if(phaseOne && phaseTwo && phaseThree /* && phaseFour)
-   /* {
-      parking = false;
-    }
-  }*/
-
   phaseOnePark();
 
   parkingComplete();
@@ -217,12 +173,6 @@ boolean phaseOnePark()
       moveReverse();                         //Reverse motor
       phaseOne = false;
     }
-    else if(rtDist <= initRightDist)
-    {
-      Steer.write(CENTER);                   //Center steering while reversing
-      moveReverse();                         //Reverse motor
-      phaseOne = false;
-    }
     else
     {
       moveStop();                            //If this is accomplished stop motor
@@ -231,7 +181,10 @@ boolean phaseOnePark()
     if(!phaseOne)
       phaseOnePark();
     else
+    {
+      previousMillis = millis();
       return phaseTwoPark();
+    }
 }
 boolean phaseTwoPark()
 {
@@ -244,32 +197,70 @@ boolean phaseTwoPark()
     rightSensor.sensorRead();                //Read right sensor
     int rtDist = rightSensor.getDistance();  //Get the last read distance
     
+    Serial.println("PhaseTwo initiated");
     if(phaseOne && !phaseTwo)
-    {
-      Serial.println("PhaseTwo initiated");
-      getInitDistance();
-      if(rDist-(initRearDist-2) > 0)
+    {    
+      unsigned long currentMillis = millis();
+      Serial.println(currentMillis);
+      Serial.println(previousMillis);    
+      Serial.println(currentMillis - previousMillis);  
+      if(currentMillis - previousMillis > interval)
+      {
+        moveStop();
+        phaseTwo = true;
+      }
+      else
       {
         Steer.write(MAX_RIGHT);
         moveReverse();
         phaseTwoPark();
       }
-      else
-      {
-        moveStop();
-        phaseTwo = true;
-      }
     }
-
+    previousMillis = millis();
     return phaseThreePark();
 }
 
 boolean phaseThreePark()
 {
-  return true;
+    frontSensor.sensorRead();                //Read front sensor
+    int fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    int rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    int lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    int rtDist = rightSensor.getDistance();  //Get the last read distance
+    Serial.println("PhaseThree initiated");
+    
+    if(phaseOne && phaseTwo && !phaseThree)
+    {
+      
+      unsigned long currentMillis = millis();
+      Serial.println(currentMillis);
+      Serial.println(previousMillis);    
+      Serial.println(currentMillis - previousMillis);    
+      if(currentMillis - previousMillis > interval)
+      {
+        Serial.println("STOP");
+        moveStop();
+        phaseThree = true;
+        Steer.write(CENTER);
+      }
+      else
+      {
+        Serial.println("Keep GOING!");
+        Steer.write(MAX_LEFT);
+        moveReverse();
+        phaseThreePark();
+      }
+    }
+    return phaseFourPark();
 }
 
-
+boolean phaseFourPark()
+{
+  return true;
+}
 
 void parkingComplete()
 {
@@ -292,8 +283,6 @@ void moveReverse()
 {
     Motor.writeMicroseconds(constrain(REVERSE_SLOW,1400, 1430));
 }
-
-
 void deBug()
 {
     Serial.println("This is a Debug message");
