@@ -122,7 +122,7 @@ void setup()
     Steer.write(90);              //Center steering servo
     moveStop();                   //Stop motor to prevent accidental takeoff
     Serial.begin(115200);
-    while(waitHere)
+    /*while(waitHere)
     {
       buttonPressed = digitalRead(startPin);
       if(buttonPressed == LOW)
@@ -135,12 +135,198 @@ void setup()
       {
         tone(speakerPin,toneFrequency,10); //Sound tone for operator to know that the button can be pressed.
       }
-    }
+    }*/
 }
 
 void loop() 
 {
-    //Not being used
+      // read the value from the sensor:
+  int sensorValue = readsensor();    
+
+  //Spit it out the serial port
+  Serial.print("A0: ");
+  Serial.println(sensorValue,DEC);
+
+  // Delay for so many milliseconds:
+  delay(100);    
+}
+
+int readFsensor()
+{
+  static int fBoxcar[10];
+
+  frontSensor.sensorRead();
+
+  /*Serial.print("Address:");
+  Serial.println((unsigned int) boxcar, HEX);
+
+  Serial.print("0:");
+  Serial.println(*boxcar);
+  Serial.print("1:");
+  Serial.println(*(boxcar+1));
+  Serial.print("2:");
+  Serial.println(*(boxcar+2));
+  Serial.print("3:");
+  Serial.println(*(boxcar+3));
+  Serial.print("4:");
+  Serial.println(*(boxcar+4));
+  Serial.print("5:");
+  Serial.println(*(boxcar+5));
+  Serial.print("6:");
+  Serial.println(*(boxcar+6));
+  Serial.print("7:");
+  Serial.println(*(boxcar+7));
+  Serial.print("8:");
+  Serial.println(*(boxcar+8));
+  Serial.print("9:");
+  Serial.println(*(boxcar+9));*/
+  
+  
+  fBoxcar[9] = fBoxcar[8];
+  fBoxcar[8] = fBoxcar[7];
+  fBoxcar[7] = fBoxcar[6];
+  fBoxcar[6] = fBoxcar[5];
+  fBoxcar[5] = fBoxcar[4];
+  fBoxcar[4] = fBoxcar[3];
+  fBoxcar[3] = fBoxcar[2];
+  fBoxcar[2] = fBoxcar[1];
+  fBoxcar[1] = fBoxcar[0];
+  fBoxcar[0] = frontSensor.getDistance();
+  
+  return ((fBoxcar[9]+fBoxcar[8]+fBoxcar[7]+fBoxcar[6]+fBoxcar[5]+fBoxcar[4]+fBoxcar[3]+fBoxcar[2]+fBoxcar[1]+fBoxcar[0])/10);
+}
+
+int readRsensor()
+{
+  static int rBoxcar[10];
+
+  rearSensor.sensorRead();
+
+  /*Serial.print("Address:");
+  Serial.println((unsigned int) boxcar, HEX);
+
+  Serial.print("0:");
+  Serial.println(*boxcar);
+  Serial.print("1:");
+  Serial.println(*(boxcar+1));
+  Serial.print("2:");
+  Serial.println(*(boxcar+2));
+  Serial.print("3:");
+  Serial.println(*(boxcar+3));
+  Serial.print("4:");
+  Serial.println(*(boxcar+4));
+  Serial.print("5:");
+  Serial.println(*(boxcar+5));
+  Serial.print("6:");
+  Serial.println(*(boxcar+6));
+  Serial.print("7:");
+  Serial.println(*(boxcar+7));
+  Serial.print("8:");
+  Serial.println(*(boxcar+8));
+  Serial.print("9:");
+  Serial.println(*(boxcar+9));*/
+  
+  
+  rBoxcar[9] = rBoxcar[8];
+  rBoxcar[8] = rBoxcar[7];
+  rBoxcar[7] = rBoxcar[6];
+  rBoxcar[6] = rBoxcar[5];
+  rBoxcar[5] = rBoxcar[4];
+  rBoxcar[4] = rBoxcar[3];
+  rBoxcar[3] = rBoxcar[2];
+  rBoxcar[2] = rBoxcar[1];
+  rBoxcar[1] = rBoxcar[0];
+  rBoxcar[0] = rearSensor.getDistance();
+  
+  return ((rBoxcar[9]+rBoxcar[8]+rBoxcar[7]+rBoxcar[6]+rBoxcar[5]+rBoxcar[4]+rBoxcar[3]+rBoxcar[2]+rBoxcar[1]+rBoxcar[0])/10);
+}
+int readlsensor()
+{
+  static int lBoxcar[10];
+
+  frontSensor.sensorRead();
+
+  /*Serial.print("Address:");
+  Serial.println((unsigned int) boxcar, HEX);
+
+  Serial.print("0:");
+  Serial.println(*boxcar);
+  Serial.print("1:");
+  Serial.println(*(boxcar+1));
+  Serial.print("2:");
+  Serial.println(*(boxcar+2));
+  Serial.print("3:");
+  Serial.println(*(boxcar+3));
+  Serial.print("4:");
+  Serial.println(*(boxcar+4));
+  Serial.print("5:");
+  Serial.println(*(boxcar+5));
+  Serial.print("6:");
+  Serial.println(*(boxcar+6));
+  Serial.print("7:");
+  Serial.println(*(boxcar+7));
+  Serial.print("8:");
+  Serial.println(*(boxcar+8));
+  Serial.print("9:");
+  Serial.println(*(boxcar+9));*/
+  
+  
+  lBoxcar[9] = lBoxcar[8];
+  lBoxcar[8] = lBoxcar[7];
+  lBoxcar[7] = lBoxcar[6];
+  lBoxcar[6] = lBoxcar[5];
+  lBoxcar[5] = lBoxcar[4];
+  lBoxcar[4] = lBoxcar[3];
+  lBoxcar[3] = lBoxcar[2];
+  lBoxcar[2] = lBoxcar[1];
+  lBoxcar[1] = lBoxcar[0];
+  lBoxcar[0] = leftSensor.getDistance();
+  
+  return ((lBoxcar[9]+lBoxcar[8]+lBoxcar[7]+lBoxcar[6]+lBoxcar[5]+lBoxcar[4]+lBoxcar[3]+lBoxcar[2]+lBoxcar[1]+lBoxcar[0])/10);
+}
+int readRtsensor()
+{
+  static int RtBoxcar[10];
+
+  rightSensor.sensorRead();
+
+  /*Serial.print("Address:");
+  Serial.println((unsigned int) boxcar, HEX);
+
+  Serial.print("0:");
+  Serial.println(*boxcar);
+  Serial.print("1:");
+  Serial.println(*(boxcar+1));
+  Serial.print("2:");
+  Serial.println(*(boxcar+2));
+  Serial.print("3:");
+  Serial.println(*(boxcar+3));
+  Serial.print("4:");
+  Serial.println(*(boxcar+4));
+  Serial.print("5:");
+  Serial.println(*(boxcar+5));
+  Serial.print("6:");
+  Serial.println(*(boxcar+6));
+  Serial.print("7:");
+  Serial.println(*(boxcar+7));
+  Serial.print("8:");
+  Serial.println(*(boxcar+8));
+  Serial.print("9:");
+  Serial.println(*(boxcar+9));*/
+  
+  
+  RtBoxcar[9] = RtBoxcar[8];
+  RtBoxcar[8] = RtBoxcar[7];
+  RtBoxcar[7] = RtBoxcar[6];
+  RtBoxcar[6] = RtBoxcar[5];
+  RtBoxcar[5] = RtBoxcar[4];
+  RtBoxcar[4] = RtBoxcar[3];
+  RtBoxcar[3] = RtBoxcar[2];
+  RtBoxcar[2] = RtBoxcar[1];
+  RtBoxcar[1] = RtBoxcar[0];
+  RtBoxcar[0] = rightSensor.getDistance();
+  
+  return ((RtBoxcar[9]+RtBoxcar[8]+RtBoxcar[7]+RtBoxcar[6]+RtBoxcar[5]+RtBoxcar[4]+RtBoxcar[3]+RtBoxcar[2]+RtBoxcar[1]+RtBoxcar[0])/10);
 }
 
 void startPark()
