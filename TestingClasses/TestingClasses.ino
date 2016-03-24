@@ -96,9 +96,6 @@ boolean phaseTwo = false;
 boolean phaseThree = false;
 boolean phaseFour = false;
 
-int rDist = 0;
-
-
 void moveStop()
 {
     Motor.write(92);
@@ -106,11 +103,14 @@ void moveStop()
 
 void getInitDistance()
 {
-    Serial.println("Get Initial");
-   // initFrontDist = readFsensor();                //Read front sensor
-    initRearDist = readRsensor();      //Get the last read distance
-    //initLeftDist = readLsensor();      //Get the last read distance
-    //initRightDist = readRtsensor();    //Get the last read distance
+    frontSensor.sensorRead();                     //Read front sensor
+    initFrontDist = frontSensor.getDistance();    //Get the last read distance
+    rearSensor.sensorRead();                      //Read rear sensor
+    initRearDist = rearSensor.getDistance();      //Get the last read distance
+    leftSensor.sensorRead();                      //Read left sensor
+    initLeftDist = leftSensor.getDistance();      //Get the last read distance
+    rightSensor.sensorRead();                     //Read right sensor
+    initRightDist = rightSensor.getDistance();    //Get the last read distance
 }
 
 
@@ -140,197 +140,60 @@ void setup()
 
 void loop() 
 {
-  //Not Being Used!
+    //Not being used
 }
-
-/*int readFsensor()
-{
-  static int fBoxcar[10];
-
-  frontSensor.sensorRead();
-
-  /*Serial.print("Address:");
-  Serial.println((unsigned int) boxcar, HEX);
-
-  Serial.print("0:");
-  Serial.println(*boxcar);
-  Serial.print("1:");
-  Serial.println(*(boxcar+1));
-  Serial.print("2:");
-  Serial.println(*(boxcar+2));
-  Serial.print("3:");
-  Serial.println(*(boxcar+3));
-  Serial.print("4:");
-  Serial.println(*(boxcar+4));
-  Serial.print("5:");
-  Serial.println(*(boxcar+5));
-  Serial.print("6:");
-  Serial.println(*(boxcar+6));
-  Serial.print("7:");
-  Serial.println(*(boxcar+7));
-  Serial.print("8:");
-  Serial.println(*(boxcar+8));
-  Serial.print("9:");
-  Serial.println(*(boxcar+9));
-  
-  
-  fBoxcar[9] = fBoxcar[8];
-  fBoxcar[8] = fBoxcar[7];
-  fBoxcar[7] = fBoxcar[6];
-  fBoxcar[6] = fBoxcar[5];
-  fBoxcar[5] = fBoxcar[4];
-  fBoxcar[4] = fBoxcar[3];
-  fBoxcar[3] = fBoxcar[2];
-  fBoxcar[2] = fBoxcar[1];
-  fBoxcar[1] = fBoxcar[0];
-  fBoxcar[0] = frontSensor.getDistance();
-  
-  return ((fBoxcar[9]+fBoxcar[8]+fBoxcar[7]+fBoxcar[6]+fBoxcar[5]+fBoxcar[4]+fBoxcar[3]+fBoxcar[2]+fBoxcar[1]+fBoxcar[0])/10);
-}*/
-
-int readRsensor()
-{
-  Serial.println("reading Rear");
-  static int rBoxcar[10];
-
-  rearSensor.sensorRead();
-
-  Serial.print("Address:");
-  Serial.println((unsigned int) rBoxcar, HEX);
-
-  Serial.print("0:");
-  Serial.println(*rBoxcar);
-  Serial.print("1:");
-  Serial.println(*(rBoxcar+1));
-  Serial.print("2:");
-  Serial.println(*(rBoxcar+2));
-  Serial.print("3:");
-  Serial.println(*(rBoxcar+3));
-  Serial.print("4:");
-  Serial.println(*(rBoxcar+4));
-  Serial.print("5:");
-  Serial.println(*(rBoxcar+5));
-  Serial.print("6:");
-  Serial.println(*(rBoxcar+6));
-  Serial.print("7:");
-  Serial.println(*(rBoxcar+7));
-  Serial.print("8:");
-  Serial.println(*(rBoxcar+8));
-  Serial.print("9:");
-  Serial.println(*(rBoxcar+9));
-  
-  
-  rBoxcar[9] = rBoxcar[8];
-  rBoxcar[8] = rBoxcar[7];
-  rBoxcar[7] = rBoxcar[6];
-  rBoxcar[6] = rBoxcar[5];
-  rBoxcar[5] = rBoxcar[4];
-  rBoxcar[4] = rBoxcar[3];
-  rBoxcar[3] = rBoxcar[2];
-  rBoxcar[2] = rBoxcar[1];
-  rBoxcar[1] = rBoxcar[0];
-  rBoxcar[0] = rearSensor.getDistance();
-
-  Serial.println("finished Rear leaving in 500 milliseconds");
-  delay(500);
-  return ((rBoxcar[9]+rBoxcar[8]+rBoxcar[7]+rBoxcar[6]+rBoxcar[5]+rBoxcar[4]+rBoxcar[3]+rBoxcar[2]+rBoxcar[1]+rBoxcar[0])/10);
-}
-/*
-int readLsensor()
-{
-  static int lBoxcar[10];
-
-  frontSensor.sensorRead();
-
-  /*Serial.print("Address:");
-  Serial.println((unsigned int) boxcar, HEX);
-
-  Serial.print("0:");
-  Serial.println(*boxcar);
-  Serial.print("1:");
-  Serial.println(*(boxcar+1));
-  Serial.print("2:");
-  Serial.println(*(boxcar+2));
-  Serial.print("3:");
-  Serial.println(*(boxcar+3));
-  Serial.print("4:");
-  Serial.println(*(boxcar+4));
-  Serial.print("5:");
-  Serial.println(*(boxcar+5));
-  Serial.print("6:");
-  Serial.println(*(boxcar+6));
-  Serial.print("7:");
-  Serial.println(*(boxcar+7));
-  Serial.print("8:");
-  Serial.println(*(boxcar+8));
-  Serial.print("9:");
-  Serial.println(*(boxcar+9));
-  
-  
-  lBoxcar[9] = lBoxcar[8];
-  lBoxcar[8] = lBoxcar[7];
-  lBoxcar[7] = lBoxcar[6];
-  lBoxcar[6] = lBoxcar[5];
-  lBoxcar[5] = lBoxcar[4];
-  lBoxcar[4] = lBoxcar[3];
-  lBoxcar[3] = lBoxcar[2];
-  lBoxcar[2] = lBoxcar[1];
-  lBoxcar[1] = lBoxcar[0];
-  lBoxcar[0] = leftSensor.getDistance();
-  
-  return ((lBoxcar[9]+lBoxcar[8]+lBoxcar[7]+lBoxcar[6]+lBoxcar[5]+lBoxcar[4]+lBoxcar[3]+lBoxcar[2]+lBoxcar[1]+lBoxcar[0])/10);
-}*/
-/*
-int readRtsensor()
-{
-  static int RtBoxcar[10];
-
-  rightSensor.sensorRead();
-
-  /*Serial.print("Address:");
-  Serial.println((unsigned int) boxcar, HEX);
-
-  Serial.print("0:");
-  Serial.println(*boxcar);
-  Serial.print("1:");
-  Serial.println(*(boxcar+1));
-  Serial.print("2:");
-  Serial.println(*(boxcar+2));
-  Serial.print("3:");
-  Serial.println(*(boxcar+3));
-  Serial.print("4:");
-  Serial.println(*(boxcar+4));
-  Serial.print("5:");
-  Serial.println(*(boxcar+5));
-  Serial.print("6:");
-  Serial.println(*(boxcar+6));
-  Serial.print("7:");
-  Serial.println(*(boxcar+7));
-  Serial.print("8:");
-  Serial.println(*(boxcar+8));
-  Serial.print("9:");
-  Serial.println(*(boxcar+9));
-  
-  
-  RtBoxcar[9] = RtBoxcar[8];
-  RtBoxcar[8] = RtBoxcar[7];
-  RtBoxcar[7] = RtBoxcar[6];
-  RtBoxcar[6] = RtBoxcar[5];
-  RtBoxcar[5] = RtBoxcar[4];
-  RtBoxcar[4] = RtBoxcar[3];
-  RtBoxcar[3] = RtBoxcar[2];
-  RtBoxcar[2] = RtBoxcar[1];
-  RtBoxcar[1] = RtBoxcar[0];
-  RtBoxcar[0] = rightSensor.getDistance();
-  
-  return ((RtBoxcar[9]+RtBoxcar[8]+RtBoxcar[7]+RtBoxcar[6]+RtBoxcar[5]+RtBoxcar[4]+RtBoxcar[3]+RtBoxcar[2]+RtBoxcar[1]+RtBoxcar[0])/10);
-}*/
 
 void startPark()
 {
   boolean parking = true;
   getInitDistance();
-  Serial.println("Did I leave Initial Distance?");
+
+  /*while(parking)
+  {
+    frontSensor.sensorRead();                //Read front sensor
+    int fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    int rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    int lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    int rtDist = rightSensor.getDistance();  //Get the last read distance
+  
+   /* Serial.println(rDist);
+    //Move backwards ~4 inches from original position then stop
+    if(rDist-(initRearDist-4) > 0)
+    {
+      Steer.write(CENTER);                   //Center steering while reversing
+      moveReverse();                         //Reverse motor
+      phaseOne = false;
+    }
+    else if(rtDist <= initRightDist)
+    {
+      Steer.write(CENTER);                   //Center steering while reversing
+      moveReverse();                         //Reverse motor
+      phaseOne = false;
+    }
+    else
+    {
+      moveStop();                            //If this is accomplished stop motor
+      phaseOne = true;
+    }
+    if(phaseOne && !phaseTwo)
+    {
+      Serial.println("PhaseTwo initiated");
+      getInitDistance();
+      if(rDist-(initRearDist-2) > 0)
+      {
+        Steer.write(MAX_RIGHT);
+        moveReverse();
+      }
+    }
+    if(phaseOne && phaseTwo && phaseThree /* && phaseFour)
+   /* {
+      parking = false;
+    }
+  }*/
+
   phaseOnePark();
 
   parkingComplete();
@@ -338,18 +201,23 @@ void startPark()
 
 boolean phaseOnePark()
 {
-    Serial.println("Phase One Begin!");
-    //int fDist = readFsensor();   //Get the last read distance
-    rDist = readRsensor();    //Get the last read distance
-    //int lDist = readLsensor();    //Get the last read distance
-    //int rtDist = readRtsensor();  //Get the last read distance
-
-    //Serial.println("front distance is: " + fDist);
-    Serial.println("rear distance is: " + rDist);
-//    Serial.println("left distance is: " + lDist);
-//    Serial.println("right distance is: " + rtDist);
+    frontSensor.sensorRead();                //Read front sensor
+    int fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    int rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    int lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    int rtDist = rightSensor.getDistance();  //Get the last read distance
+    
     //Move backwards ~4 inches from original position then stop
     if(rDist-(initRearDist-4) > 0)
+    {
+      Steer.write(CENTER);                   //Center steering while reversing
+      moveReverse();                         //Reverse motor
+      phaseOne = false;
+    }
+    else if(rtDist <= initRightDist)
     {
       Steer.write(CENTER);                   //Center steering while reversing
       moveReverse();                         //Reverse motor
@@ -367,13 +235,14 @@ boolean phaseOnePark()
 }
 boolean phaseTwoPark()
 {
-//    int fDist = readFsensor();   //Get the last read distance
-
-    int rDist = readRsensor();    //Get the last read distance
-
-//    int lDist = readLsensor();    //Get the last read distance
-
-//    int rtDist = readRtsensor();  //Get the last read distance
+    frontSensor.sensorRead();                //Read front sensor
+    int fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    int rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    int lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    int rtDist = rightSensor.getDistance();  //Get the last read distance
     
     if(phaseOne && !phaseTwo)
     {
