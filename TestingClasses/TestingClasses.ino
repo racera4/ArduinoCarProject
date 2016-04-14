@@ -50,9 +50,10 @@
 #include "PingSensor.h"
 #include <Servo.h>
 
-#define REVERSE_SLOW 1400
-#define REVERSE_SLOWER 1420
-#define REVERSE_SLOWEST 1430
+#define FORWARD_SLOW 1535
+#define REVERSE_SLOW 1430
+#define REVERSE_SLOWER 1440
+#define REVERSE_SLOWEST 1450
 
 int frontPingPin = 2;       //Pin for front PING sensor -- Green Wire
 int rearPingPin = 4;        //Pin for rear PING sensor -- Blue Wire
@@ -76,7 +77,7 @@ int MAX_LEFT = 74;          //Maximum left turn in degrees
 int MIN_LEFT = 87;          //Slight left turn in degrees
 int CENTER = 92;            //Center point
 
-int minDist = 3;            //The Minimum distance allowed (inches)
+int minDist = 7.6;            //The Minimum distance allowed (inches)
 
 
 PingSensor frontSensor(frontPingPin, sDelay);       //Initialize front sensor
@@ -86,10 +87,10 @@ PingSensor rightSensor(rightPingPin, sDelay);       //Initialize right sensor
 Servo Motor;        //Initialize motor control
 Servo Steer;        //Initialize steering control
 
-int initFrontDist = 0;
-int initRearDist = 0;
-int initLeftDist = 0;
-int initRightDist = 0;
+double initFrontDist = 0;
+double initRearDist = 0;
+double initLeftDist = 0;
+double initRightDist = 0;
 
 boolean phaseOne = false;
 boolean phaseTwo = false;
@@ -97,7 +98,10 @@ boolean phaseThree = false;
 boolean phaseFour = false;
 
 long previousMillis = 0;
-long interval = 2500;
+long interval_1 = 3250;
+long interval_2 = 2500;
+long interval_3 = 1750;
+
 void moveStop()
 {
     Motor.write(92);
@@ -158,16 +162,16 @@ void startPark()
 boolean phaseOnePark()
 {
     frontSensor.sensorRead();                //Read front sensor
-    int fDist = frontSensor.getDistance();   //Get the last read distance
+    double fDist = frontSensor.getDistance();   //Get the last read distance
     rearSensor.sensorRead();                 //Read rear sensor
-    int rDist = rearSensor.getDistance();    //Get the last read distance
+    double rDist = rearSensor.getDistance();    //Get the last read distance
     leftSensor.sensorRead();                 //Read left sensor
-    int lDist = leftSensor.getDistance();    //Get the last read distance
+    double lDist = leftSensor.getDistance();    //Get the last read distance
     rightSensor.sensorRead();                //Read right sensor
-    int rtDist = rightSensor.getDistance();  //Get the last read distance
+    double rtDist = rightSensor.getDistance();  //Get the last read distance
     
-    //Move backwards ~4 inches from original position then stop
-    if(rDist-(initRearDist-4) > 0)
+    //Move backwards ~2.5 centimeters from original position then stop
+    if(rDist-(initRearDist-2.5) > 0)
     {
       Steer.write(CENTER);                   //Center steering while reversing
       moveReverse();                         //Reverse motor
@@ -189,13 +193,13 @@ boolean phaseOnePark()
 boolean phaseTwoPark()
 {
     frontSensor.sensorRead();                //Read front sensor
-    int fDist = frontSensor.getDistance();   //Get the last read distance
+    double fDist = frontSensor.getDistance();   //Get the last read distance
     rearSensor.sensorRead();                 //Read rear sensor
-    int rDist = rearSensor.getDistance();    //Get the last read distance
+    double rDist = rearSensor.getDistance();    //Get the last read distance
     leftSensor.sensorRead();                 //Read left sensor
-    int lDist = leftSensor.getDistance();    //Get the last read distance
+    double lDist = leftSensor.getDistance();    //Get the last read distance
     rightSensor.sensorRead();                //Read right sensor
-    int rtDist = rightSensor.getDistance();  //Get the last read distance
+    double rtDist = rightSensor.getDistance();  //Get the last read distance
     
     Serial.println("PhaseTwo initiated");
     if(phaseOne && !phaseTwo)
@@ -204,10 +208,15 @@ boolean phaseTwoPark()
       Serial.println(currentMillis);
       Serial.println(previousMillis);    
       Serial.println(currentMillis - previousMillis);  
-      if(currentMillis - previousMillis > interval)
+      if(currentMillis - previousMillis > interval_1)
       {
         moveStop();
         phaseTwo = true;
+      }
+      else if (rDist < 7.5)
+      {
+        moveStop();
+        parkingFail();
       }
       else
       {
@@ -223,28 +232,32 @@ boolean phaseTwoPark()
 boolean phaseThreePark()
 {
     frontSensor.sensorRead();                //Read front sensor
-    int fDist = frontSensor.getDistance();   //Get the last read distance
+    double fDist = frontSensor.getDistance();   //Get the last read distance
     rearSensor.sensorRead();                 //Read rear sensor
-    int rDist = rearSensor.getDistance();    //Get the last read distance
+    double rDist = rearSensor.getDistance();    //Get the last read distance
     leftSensor.sensorRead();                 //Read left sensor
-    int lDist = leftSensor.getDistance();    //Get the last read distance
+    double lDist = leftSensor.getDistance();    //Get the last read distance
     rightSensor.sensorRead();                //Read right sensor
-    int rtDist = rightSensor.getDistance();  //Get the last read distance
+    double rtDist = rightSensor.getDistance();  //Get the last read distance
     Serial.println("PhaseThree initiated");
     
     if(phaseOne && phaseTwo && !phaseThree)
     {
-      
       unsigned long currentMillis = millis();
       Serial.println(currentMillis);
       Serial.println(previousMillis);    
       Serial.println(currentMillis - previousMillis);    
-      if(currentMillis - previousMillis > interval)
+      if(currentMillis - previousMillis > interval_2)
       {
         Serial.println("STOP");
         moveStop();
         phaseThree = true;
         Steer.write(CENTER);
+      }
+      else if (rDist < 7.5)
+      {
+        moveStop();
+        parkingFail();
       }
       else
       {
@@ -254,12 +267,52 @@ boolean phaseThreePark()
         phaseThreePark();
       }
     }
+    previousMillis = millis();
     return phaseFourPark();
 }
 
 boolean phaseFourPark()
 {
-  return true;
+    frontSensor.sensorRead();                //Read front sensor
+    double fDist = frontSensor.getDistance();   //Get the last read distance
+    rearSensor.sensorRead();                 //Read rear sensor
+    double rDist = rearSensor.getDistance();    //Get the last read distance
+    leftSensor.sensorRead();                 //Read left sensor
+    double lDist = leftSensor.getDistance();    //Get the last read distance
+    rightSensor.sensorRead();                //Read right sensor
+    double rtDist = rightSensor.getDistance();  //Get the last read distance
+    Serial.println("PhaseFour initiated");
+
+/*    Serial.println("The values of PhaseFour is:");
+    Serial.println(phaseFour);
+    Serial.println("The values of PhaseThree is:");
+    Serial.println(phaseThree);
+    Serial.println("The values of PhaseTwo is:");
+    Serial.println(phaseTwo);
+    Serial.println("The values of PhaseOne is:");
+    Serial.println(phaseOne);*/
+    
+    if(phaseOne && phaseTwo && phaseThree && !phaseFour)
+    {
+      unsigned long currentMillis = millis();
+      Serial.println(currentMillis);
+      Serial.println(previousMillis);    
+      Serial.println(currentMillis - previousMillis);    
+      if(currentMillis - previousMillis > interval_2)
+      {
+        Serial.println("STOP@4");
+        moveStop();
+        phaseFour = true;
+        Steer.write(CENTER);
+      }
+      else
+      {
+        Steer.write(MAX_RIGHT);
+        moveForward();
+        phaseFourPark();
+      }
+    }
+    return true;
 }
 
 void parkingComplete()
@@ -273,15 +326,26 @@ void parkingComplete()
     delay(400);
   }
 }
+void parkingFail()
+{
+  while(true)
+  {
+    moveStop();
+    tone(speakerPin, toneFrequency);
+    delay(200);
+    noTone(speakerPin);
+    delay(200);
+  }
+}
 
 void moveForward()
 {
-    Motor.write(100);
+    Motor.writeMicroseconds(constrain(FORWARD_SLOW,1533,1550));
 }
 
 void moveReverse()
 {
-    Motor.writeMicroseconds(constrain(REVERSE_SLOW,1400, 1430));
+    Motor.writeMicroseconds(constrain(REVERSE_SLOWEST,1400, 1455));
 }
 void deBug()
 {

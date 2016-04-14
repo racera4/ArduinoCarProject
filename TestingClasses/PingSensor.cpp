@@ -94,7 +94,7 @@ void PingSensor::getDistance(double duration)
 }
 double PingSensor::getDistance()
 {
-  return inches;
+  return cm;
 }
 double PingSensor::microsecondsToInches(double microseconds) {
   // According to Parallax's datasheet for the PING))), there are
