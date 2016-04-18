@@ -50,7 +50,7 @@
 #include "PingSensor.h"
 #include <Servo.h>
 
-#define FORWARD_SLOW 1535
+#define FORWARD_SLOW 1536
 #define REVERSE_SLOW 1430
 #define REVERSE_SLOWER 1440
 #define REVERSE_SLOWEST 1450
@@ -98,9 +98,9 @@ boolean phaseThree = false;
 boolean phaseFour = false;
 
 long previousMillis = 0;
-long interval_1 = 3000;
-long interval_2 = 2500;
-long interval_3 = 1750;
+long interval_1 = 2500; //3250 when battery is low
+long interval_2 = 1750; //2250 when battery is low
+long interval_3 = 1900; //1750 when.....
 
 void moveStop()
 {
