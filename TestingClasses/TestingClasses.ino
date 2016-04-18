@@ -152,6 +152,7 @@ void loop()
 void startPark()
 {
   boolean parking = true;
+  delay(500);
   getInitDistance();
 
   phaseOnePark();
