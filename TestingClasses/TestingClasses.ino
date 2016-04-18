@@ -255,7 +255,7 @@ boolean phaseThreePark()
         phaseThree = true;
         Steer.write(CENTER);
       }
-      else if (rDist < 7.5)
+      else if (rDist < 5)
       {
         moveStop();
         parkingFail();
@@ -305,6 +305,11 @@ boolean phaseFourPark()
         moveStop();
         phaseFour = true;
         Steer.write(CENTER);
+      }
+      else if (fDist < 5)
+      {
+        moveStop();
+        parkingFail();
       }
       else
       {
