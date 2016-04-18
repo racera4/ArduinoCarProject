@@ -98,7 +98,7 @@ boolean phaseThree = false;
 boolean phaseFour = false;
 
 long previousMillis = 0;
-long interval_1 = 3250;
+long interval_1 = 3000;
 long interval_2 = 2500;
 long interval_3 = 1750;
 
