@@ -38,7 +38,14 @@
 *PIN 11: UNUSED
 *PIN 12: UNUSED
 *PIN 13: UNUSED
-* 
+************************
+*As of 4/19/2016
+*This Code is what was final for 
+*the senior project presentation.
+*Further development should be done
+*to extend the project into further
+*use cases and to also give better
+*accuracy for the car.
 */
 #define DGB
 #ifndef DGB
